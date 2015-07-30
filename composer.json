@@ -1,0 +1,25 @@
+{
+  "name": "mleko/stdlib",
+  "type": "library",
+  "require": {
+    "league/url": "^3.3"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "mleko",
+      "email": "spam@krol.me"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Mleko\\Stdlib\\": "lib"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:mleko/url.git"
+    }
+  ]
+}
