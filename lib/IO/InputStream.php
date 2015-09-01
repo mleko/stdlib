@@ -10,5 +10,9 @@ namespace Mleko\Stdlib\IO;
 
 interface InputStream extends Stream
 {
+    /**
+     * @param integer|null $length
+     * @return string|false
+     */
     public function read($length = null);
 }
