@@ -27,18 +27,4 @@ interface OutputStream extends Stream
      * @return boolean
      */
     public function close($flush = true);
-
-    /**
-     * Check if reached end of stream
-     * 
-     * @return boolean
-     */
-    public function endOfStream();
-
-    /**
-     * Check if destination resource exists
-     * 
-     * @return boolean
-     */
-    public function exists();
 }

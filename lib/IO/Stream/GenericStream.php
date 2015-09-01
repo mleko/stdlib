@@ -25,7 +25,7 @@ class GenericStream implements \Mleko\Stdlib\IO\InputStream, \Mleko\Stdlib\IO\Ou
      * @param bool $open Should stream be opened eagerly. Usable when $handle is string definition.
      * @throws StreamException
      */
-    function __construct($handle, $mode = null, $open = false)
+    public function __construct($handle, $mode = null, $open = false)
     {
         if (is_string($handle)) {
             if (!$mode) {
@@ -135,7 +135,7 @@ class GenericStream implements \Mleko\Stdlib\IO\InputStream, \Mleko\Stdlib\IO\Ou
 
     private function open()
     {
-        if($this->isOpened()){
+        if ($this->isOpened()) {
             throw new StreamException("Stream was already opened");
         }
         $handle = fopen($this->definition[0], $this->definition[1]);
