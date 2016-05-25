@@ -17,8 +17,8 @@ class UrlStreamFactory extends AbstractStreamFactory
 {
 
     private $default = [];
-    private $joinPath = true;
-    private $joinQuery = true;
+    public $joinPath = true;
+    public $joinQuery = true;
 
     /**
      * UrlStreamFactory constructor.
