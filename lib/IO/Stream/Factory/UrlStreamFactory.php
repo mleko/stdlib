@@ -16,9 +16,11 @@ namespace Mleko\Stdlib\IO\Stream\Factory;
 class UrlStreamFactory extends AbstractStreamFactory
 {
 
-    private $default = [];
     public $joinPath = true;
     public $joinQuery = true;
+    private $default = [];
+    /** @var \Psr\Log\LoggerInterface|null */
+    private $logger;
 
     /**
      * UrlStreamFactory constructor.
@@ -26,12 +28,14 @@ class UrlStreamFactory extends AbstractStreamFactory
      * @param string $createMode
      * @param bool $joinPath
      * @param bool $joinQuery
+     * @param \Psr\Log\LoggerInterface $logger
      */
-    public function __construct(array $components = [], $createMode = 'x', $joinPath = true, $joinQuery = true)
+    public function __construct(array $components = [], $createMode = 'x', $joinPath = true, $joinQuery = true, \Psr\Log\LoggerInterface $logger = null)
     {
         $this->default = $components;
         $this->joinPath = $joinPath;
         $this->joinQuery = $joinQuery;
+        $this->logger = $logger;
 
         parent::__construct($createMode);
     }
@@ -39,17 +43,18 @@ class UrlStreamFactory extends AbstractStreamFactory
     /**
      * @param string|string[] $components path or array in format defined by http://php.net/manual/function.parse-url.php
      * @param string $mode Stream mode. Available modes http://php.net/manual/function.fopen.php
+     * @param bool $write
      * @return \Mleko\Stdlib\IO\Stream
      * @throws \Mleko\Stdlib\IO\Stream\StreamException
      */
-    protected function createStream($components, $mode)
+    protected function createStream($components, $mode, $write = false)
     {
         $url = $this->buildUrl($components);
 
         if (false === $url) {
             throw new  \Mleko\Stdlib\IO\Stream\StreamException("Failed to build stream url");
         }
-        if ($mode && in_array($mode[0], ['w', 'a', 'x'])) {
+        if ($write) {
             // Ignore failures as some streams are directory-less
             $this->createDirectory($url);
         }
@@ -90,15 +95,25 @@ class UrlStreamFactory extends AbstractStreamFactory
      */
     private function createDirectory($url)
     {
-        $pathArray = $url->getPath()->toArray();
+        $path = $url->getPath();
+        $pathArray = $path->toArray();
+        $this->log(\Psr\Log\LogLevel::DEBUG, "Ensure directory exists", ['url' => $url]);
         array_pop($pathArray);
         $url = $url->setPath(new \League\Url\Components\Path($pathArray));
         $result = true;
         if (!file_exists((string)$url)) {
+            $this->log(\Psr\Log\LogLevel::DEBUG, "Attempt directory creation", ['path' => (string)$url]);
             $result = @mkdir((string)$url, 0777, true);
+            $this->log(\Psr\Log\LogLevel::DEBUG, $result ? "Created directory" : "Failed to create directory", ['path' => (string)$url]);
         }
         return $result;
     }
 
+    private function log($level, $message, $context = [])
+    {
+        if ($this->logger) {
+            $this->logger->log($level, $message, $context);
+        }
+    }
 
 }

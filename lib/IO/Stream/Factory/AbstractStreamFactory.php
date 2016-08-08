@@ -1,9 +1,4 @@
 <?php
-/**
- * Created on
- * Date: 30/07/15
- * Time: 09:14
- */
 
 namespace Mleko\Stdlib\IO\Stream\Factory;
 
@@ -11,8 +6,8 @@ namespace Mleko\Stdlib\IO\Stream\Factory;
 abstract class AbstractStreamFactory implements \Mleko\Stdlib\IO\Stream\StreamFactory
 {
     /**
-     * Stream create mode.
-     * 
+     * OutputStream create mode.
+     *
      * @var string
      */
     private $createMode = 'x';
@@ -32,7 +27,7 @@ abstract class AbstractStreamFactory implements \Mleko\Stdlib\IO\Stream\StreamFa
      */
     public function createInputStream($definition)
     {
-        return $this->createStream($definition, "r");
+        return $this->createStream($definition, "r", false);
     }
 
     /**
@@ -40,15 +35,16 @@ abstract class AbstractStreamFactory implements \Mleko\Stdlib\IO\Stream\StreamFa
      */
     public function createOutputStream($definition)
     {
-        return $this->createStream($definition, $this->createMode);
+        return $this->createStream($definition, $this->createMode, true);
     }
 
     /**
      * @param mixed $components
      * @param string $mode Stream mode. Available modes http://php.net/manual/function.fopen.php
+     * @param bool $write
      * @return \Mleko\Stdlib\IO\Stream
      */
-    abstract protected function createStream($components, $mode);
+    abstract protected function createStream($components, $mode, $write = false);
 
 
 }
