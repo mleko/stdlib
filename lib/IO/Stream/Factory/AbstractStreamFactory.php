@@ -3,7 +3,9 @@
 namespace Mleko\Stdlib\IO\Stream\Factory;
 
 
-abstract class AbstractStreamFactory implements \Mleko\Stdlib\IO\Stream\StreamFactory
+use Mleko\Stdlib\IO\Stream\StreamFactory;
+
+abstract class AbstractStreamFactory implements StreamFactory
 {
     /**
      * OutputStream create mode.
@@ -32,10 +34,11 @@ abstract class AbstractStreamFactory implements \Mleko\Stdlib\IO\Stream\StreamFa
 
     /**
      * @inheritDoc
+     * @var $mode string|null
      */
-    public function createOutputStream($definition)
+    public function createOutputStream($definition, $mode = null)
     {
-        return $this->createStream($definition, $this->createMode, true);
+        return $this->createStream($definition, null !== $mode ? $mode : $this->createMode, true);
     }
 
     /**
@@ -45,6 +48,5 @@ abstract class AbstractStreamFactory implements \Mleko\Stdlib\IO\Stream\StreamFa
      * @return \Mleko\Stdlib\IO\Stream
      */
     abstract protected function createStream($components, $mode, $write = false);
-
 
 }
